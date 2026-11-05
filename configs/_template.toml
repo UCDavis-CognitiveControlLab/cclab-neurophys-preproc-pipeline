@@ -1,0 +1,70 @@
+# =============================================================================
+# Session config: one file per recording session.
+#
+# File name = session_id = <animal>_<YYYYMMDD>_<area>, saved under configs/<probe>/.
+# Make a new one with:   uv run cclab-preproc new-config
+# Check it with:         uv run cclab-preproc show configs/<probe>/<session_id>.toml
+#
+# Paths: anything ending in _dir / _file / _path is a path. Relative paths are
+# resolved inside the CC Lab data standard layout:
+#   <data_root>/<probe folder>/<animal>/<session_id>/<task>/...
+# (data_root comes from configs/local.toml, so this file never contains
+# machine-specific paths). Absolute paths are used as written, which is handy for
+# older sessions that are not in the standard layout yet.
+# =============================================================================
+
+[session]
+animal = "{animal}"          # venni | isaac
+date = "{date}"              # YYYYMMDD
+area = "{area}"              # SEF | FEF
+probe = "{probe}"            # npx | sprobe | ripple
+penetration = ""             # e.g. "4,4"
+stim = false
+notes = ""
+
+# One [[tasks]] block per task block / acquisition run, in recording order.
+# name         = task folder name (mgs, mgs2, mgsDiffDir, FV, RF, add "+stim" for stim runs)
+# spikeglx_run = SpikeGLX run name; data are in <task>/raw/<spikeglx_run>_g<gate>/
+{tasks}
+
+# -----------------------------------------------------------------------------
+# Step 1: CatGT pass 1 (filter, CAR, artifact removal, edge extraction) for each
+# task block, then supercat (pass 2) to join them for Kilosort. These defaults are
+# the lab's previous pass1/pass2_for_supercat.bat settings.
+# -----------------------------------------------------------------------------
+[catgt]
+# tasks = ["mgs", "FV"]      # which task blocks to include (default: all with spikeglx_run)
+trigger = "0,0"              # -t
+probes = "0"                 # -prb ("0:1" for two probes)
+prb_fld = false              # true if SpikeGLX saved per-probe folders (<run>_g0_imec0/)
+out_prb_fld = true
+ap = true
+lf = false
+ni = true                    # false if there is no NI-DAQ stream
+apfilter = "butter,12,300,10000"
+lffilter = ""                # e.g. "butter,12,1,500" (only used when lf = true)
+gblcar = true
+gfix = "0.40,0.10,0.02"
+pass1_force_ni_ob_bin = true
+extra_args = []              # extra pass-1 flags, e.g. edge extractors ["-xd=0,0,-1,1,50"]
+supercat = true              # join all task blocks into one recording (needs 2+ tasks)
+supercat_trim_edges = true   # set false if the data have no sync signal
+supercat_extra_args = []
+# pass1_subdir = "processed/catgt"     # inside each task folder
+# supercat_dir = "processed/supercat"  # inside the session folder
+
+# -----------------------------------------------------------------------------
+# Step 4: build the grab-and-go <task>.mat metafile after Kilosort + Phy curation.
+# -----------------------------------------------------------------------------
+[meta]
+task = "{first_task}"
+ks_dir = "processed/kilosort4"                         # Kilosort/Phy output folder
+sync_events_file = "processed/events/sync_event_codes.npy"
+behavior_file = ""                                     # PsychToolbox Results .mat; "" = skip trials
+sampling_rate = 30000
+lfp_fs = 1250
+inclusion = ["good", "mua"]
+label_column = "KSLabel"     # "group" = use your Phy curation labels instead
+code_start = 4               # event code: trial start
+code_attempt = 1             # event code: trial attempt (alignment)
+n_target_pos = 8

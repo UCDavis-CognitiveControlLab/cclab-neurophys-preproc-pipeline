@@ -1,0 +1,66 @@
+# Neuropixels, Venni, 2025-06-11, SEF penetration (4,4), MGS with distractors.
+# Old folder name: 061125_Vennie. This session is NOT in the data-standard layout yet,
+# so the paths below are absolute. Once it is moved, replace them with paths
+# relative to the task folder (e.g. psth_dir = "derivatives/psth_new").
+
+[session]
+animal = "venni"
+date = "20250611"
+area = "SEF"
+probe = "npx"
+penetration = "4,4"
+stim = false
+notes = "Originally processed by Brinda (CCLab-BrindaRepo)."
+
+[[tasks]]
+name = "mgs2"
+spikeglx_run = "MGS2"
+gate = 0
+
+[catgt]
+# pass1/supercat settings used for this session (same as the old .bat files)
+trigger = "0,0"
+probes = "0"
+apfilter = "butter,12,300,10000"
+gblcar = true
+gfix = "0.40,0.10,0.02"
+ni = true
+
+# -----------------------------------------------------------------------------
+# notebooks/Neuropix_Processing_MI_Timescale.ipynb
+# -----------------------------------------------------------------------------
+[mi_classification]
+task = "mgs2"
+psth_dir = 'D:\Neuropixel_data\061125_Vennie\merged_all\supercat_MGS2_g0\psth_new'
+mat_dir = 'D:\Neuropixel_data\061125_Vennie\MATLAB\mgs'
+out_dir = 'D:\Neuropixel_data\061125_Vennie\merged_all\supercat_MGS2_g0\psth_new'  # same as before, so FunctionalGrp_Timescale_Comparison still finds results_MI_Timescale.pkl
+output_suffix = ""
+
+# input files (names inside psth_dir / mat_dir), keyed by distractor angle
+psth_files = { 0 = "psth_3d_dist_0.0_nosmooth.mat", 45 = "psth_3d_dist_45.0_nosmooth.mat", 180 = "psth_3d_dist_180.0_nosmooth.mat" }
+saccade_files = { 0 = "SaccadeTimes_remgs2.mat", 45 = "SaccadeTimes_remgs45.mat", 180 = "SaccadeTimes_remgs180.mat" }
+angs_name = "angsSuccess.npy"
+distractor_name = "distractor.npy"
+good_neurons_name = "good_neurons.npy"
+tau_name = "tau_values.mat"   # from the timescale analysis
+
+# PSTH time axis (target-aligned): bins start at psth_start_ms, bin_ms wide
+psth_start_ms = -500
+psth_end_ms = 1800
+bin_ms = 10
+saccade_offset_s = 0.9        # added to saccade times (target onset -> PSTH time zero)
+sacc_pre_ms = 400             # saccade-aligned window
+sacc_post_ms = 400
+
+# Analysis windows as [start, stop) bin indices. ms = psth_start_ms + bin * bin_ms
+baseline_bins = [0, 50]       # -500 ..   0 ms
+visual_bins = [55, 80]        #   50 .. 300 ms
+memory_bins = [80, 120]       #  300 .. 700 ms
+motor_bins = [30, 45]         # saccade-aligned: -100 .. +50 ms around the saccade
+
+# statistics
+n_permutations = 1000
+n_neighbors = 5
+alpha = 0.05
+min_rate = 3                  # Hz, mean rate in the epoch window
+n_jobs = 32                   # -1 = all cores

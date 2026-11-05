@@ -1,0 +1,20 @@
+# Python / uv
+.venv/
+__pycache__/
+*.egg-info/
+.pytest_cache/
+.ipynb_checkpoints/
+
+# Machine-specific settings (data root, CatGT path). Copy configs/local.example.toml.
+configs/local.toml
+
+# Never commit data or pipeline outputs
+*.bin
+*.meta
+*.npy
+*.mat
+*.pkl
+*.png
+demo_data/
+
+.DS_Store

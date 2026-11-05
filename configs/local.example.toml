@@ -1,0 +1,13 @@
+# Machine-specific settings. Copy this file to configs/local.toml (git ignores it)
+# and edit for your computer. Environment variables override it:
+#   CCLAB_DATA_ROOT, CCLAB_CATGT
+
+# Folder that contains the probe folders (neuropixel/, plexon/, ripple/) of the
+# CC Lab data standard, e.g. the mounted lab share.
+data_root = "D:/cclab/shared/data"          # Windows: forward slashes or '\\'
+# data_root = "/Volumes/cclab/shared/data"  # macOS
+# data_root = "/mnt/cclab/shared/data"      # Linux
+
+# CatGT executable: CatGT.exe on Windows, runit.sh on Linux.
+# Download: https://billkarsh.github.io/SpikeGLX/#catgt
+catgt_path = "C:/SpikeGLX/CatGT-win/CatGT.exe"

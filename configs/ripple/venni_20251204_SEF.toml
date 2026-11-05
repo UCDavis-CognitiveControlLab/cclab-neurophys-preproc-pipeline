@@ -1,0 +1,53 @@
+# Ripple (32 ch), Venni, 2025-12-04, MGS after stimulation.
+# Old folder name: Venni_120425. Not in the data-standard layout yet, so the paths
+# below are absolute.
+# TODO: confirm the area; SEF is a guess.
+
+[session]
+animal = "venni"
+date = "20251204"
+area = "SEF"
+probe = "ripple"
+stim = true
+notes = "Originally processed by Brinda (CCLab-BrindaRepo). PSTH from the 'After Stimulation' block."
+
+[[tasks]]
+name = "mgs+stim"
+
+# -----------------------------------------------------------------------------
+# notebooks/Ripple_Processing_MI_Timescale.ipynb
+# -----------------------------------------------------------------------------
+[mi_classification]
+task = "mgs+stim"
+psth_dir = 'D:\Ripple_data\Venni_120425\TimescaleAnalysis\After Stimulation'
+mat_dir = 'D:\Ripple_data\Venni_120425\matlab'
+out_dir = 'D:\Ripple_data\Venni_120425\TimescaleAnalysis\After Stimulation'  # same as before
+output_suffix = "_3std"
+
+psth_name = "mgs_psth_3d_smooth_3std.mat"
+target_angle_name = "targetAng.mat"
+saccade_name = "saccadeTimesAS.mat"
+tau_name = "tau_values.mat"
+# electrode label for each PSTH row
+channel_names = [1, 17, 2, 18, 3, 19, 4, 20, 5, 21, 6, 22, 7, 23, 8, 24, 9, 25, 10, 26, 11, 27, 12, 28, 13, 29, 14, 30, 15, 31, 16, 32]
+
+psth_start_ms = -500
+psth_end_ms = 2500
+bin_ms = 10
+saccade_offset_s = 1.1
+sacc_pre_ms = 1000
+sacc_post_ms = 1000
+
+# [start, stop) bin indices. ms = psth_start_ms + bin * bin_ms
+baseline_bins = [20, 50]          # -300 ..   0 ms
+visual_bins = [50, 90]            #    0 .. 400 ms
+memory_bins = [90, 130]           #  400 .. 800 ms
+motor_bins = [80, 110]            # saccade-aligned: -200 .. +100 ms
+post_saccade_bins = [130, 180]    # saccade-aligned: +300 .. +800 ms
+
+n_permutations = 1000
+n_neighbors = 5
+n_cv_folds = 5
+alpha = 0.05
+min_rate = 0                      # z-scored units
+n_jobs = 32
