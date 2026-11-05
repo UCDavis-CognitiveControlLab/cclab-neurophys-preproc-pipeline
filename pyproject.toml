@@ -35,3 +35,4 @@ packages = ["src/cclab_preproc"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
+markers = ["notebooks: executes the notebooks on synthetic data (slower)"]

@@ -55,6 +55,7 @@ function meta = BuildRecordingMeta(cfgOverride)
 %
 %% ======================== ADD readNPY TO PATH ===========================
 
+% EDIT: point this at your copy of npy-matlab
 addpath('C:\Users\tphamel\Desktop\Taylor\WorkingMemory\Modules\npy-matlab-master\npy-matlab-master\npy-matlab')
 
 
@@ -69,6 +70,7 @@ cfg.inclusion     = {'good','mua'};      % KSLabel groups to keep
 cfg.code_start    = 4;                   % event code: trial start
 cfg.code_attempt  = 1;                   % event code: trial attempt (alignment)
 cfg.n_target_pos  = 8;                   % 8-direction MGS 
+cfg.builder_version = 'm-1.0';         % recorded in meta.info (was read but never set)
 
 cfg.ks_dir        = 'C:\Users\tphamel\Desktop\Taylor\WorkingMemory\MGSDiffDir\Neuropixel\040825_Vennie\MGS\neuro\MGS2_g0_imec0\curated\kilosort4';
 cfg.sync_events   = 'C:\Users\tphamel\Desktop\Taylor\WorkingMemory\MGSDiffDir\Neuropixel\040825_Vennie\MGS\neuro\sync_event_codes.npy';
