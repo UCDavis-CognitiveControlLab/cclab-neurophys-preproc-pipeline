@@ -84,6 +84,7 @@ tests/                      `uv run pytest` (also runs every notebook on synthet
 - [docs/configuration.md](docs/configuration.md): config file reference, paths, archiving
 - [docs/data-standard.md](docs/data-standard.md): how this repo applies the CC Lab Data Organization Standard
 - [docs/known-issues.md](docs/known-issues.md): open questions and analysis caveats
+- [docs/pickup.md](docs/pickup.md): work in progress, where the Oct 2026 movie-paradigm sorting stands
 
 ## Development
 
