@@ -5,6 +5,9 @@ __pycache__/
 .pytest_cache/
 .ipynb_checkpoints/
 
+# direnv / nix-direnv cache (per machine)
+.direnv/
+
 # Machine-specific settings (data root, CatGT path). Copy configs/local.example.toml.
 configs/local.toml
 
