@@ -33,10 +33,17 @@ def rising_edges(word: np.ndarray, bit: int) -> np.ndarray:
     return np.flatnonzero((b[:-1] == 0) & (b[1:] == 1)) + 1
 
 
+def find_one(folder: Path, pattern: str) -> Path:
+    hits = sorted(folder.glob(pattern))
+    if not hits:
+        raise SystemExit(f"error: no file matching {pattern} in {folder}")
+    return hits[0]
+
+
 def build(run_dir: Path, event_log: Path, bit_on: int = BIT_ON, bit_off: int = BIT_OFF) -> pd.DataFrame:
-    ni_bin = next(run_dir.glob("*.nidq.bin"))
-    ni = read_meta(ni_bin.with_suffix(".meta"))
-    ap = read_meta(next(run_dir.glob("*_imec0/*.ap.meta")))
+    ni_bin = find_one(run_dir, "*.nidq.bin")
+    ni = read_meta(find_one(run_dir, "*.nidq.meta"))
+    ap = read_meta(find_one(run_dir, "*_imec0/*.ap.meta"))
     ni_rate, im_rate = float(ni["niSampRate"]), float(ap["imSampRate"])
     nch = int(ni["nSavedChans"])
     word = np.memmap(ni_bin, dtype=np.int16, mode="r").reshape(-1, nch)[:, -1].astype(np.uint16)
