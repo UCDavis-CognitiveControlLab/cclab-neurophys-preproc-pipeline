@@ -15,7 +15,7 @@ NAS = `R:\shared\current\Neuropixel` (`\\cns-nas.ucdavis.edu\cclab`). Sorting PC
 |---|---|---|---|---|
 | 10/07 | `100726_V_SEF` | `Movie+MGS\matlab\mgsmo*.mat` only | none | nothing to sort |
 | 10/09 | `100926_Venni_SEF_ACC` | `movie\2026-10-09_124846_exp\` | `movie1_g0\` on the NAS, 1 probe (NP1032), 94 min, 130 GB | **sorted** 11/04–05 (KS 4.1.7): 609 units, 267 good, drift 6.5 µm. Not curated in Phy (`cluster_group.tsv` == `cluster_KSLabel.tsv`) |
-| 10/10 | `101026_V_SEF_ACC` | `Movie\2026-10-10_130828_exp\` | **missing** | `MGSFV\neuro\` is empty too. Not on `D:`, `G:`, `F:` or the NAS (searched 4 levels deep). Has to be pulled from the acquisition PC and uploaded |
+| 10/10 | `101026_V_SEF_ACC` | `Movie\2026-10-10_130828_exp\` | **missing** (on the NAS since 2026-11-20: `Movie\Movie_g0`, see [TODO.md](TODO.md)) | `MGSFV\neuro\` is empty too. Not on `D:`, `G:`, `F:` or the NAS (searched 4 levels deep). Has to be pulled from the acquisition PC and uploaded |
 | 10/11 | `101126_Vennie_SEF_ACC` | none | none | no movie that day (MGSFV + MGSVD only) |
 | 10/12 | `101226_Vennie_SEF_FEF` | not on the NAS | `D:\Wenqing\SortingOngoing\101226_VDual\Movie_g0\`, 2 probes (imec0, imec1), ~40 min, 52 GB each | **unsorted** (no `kilosort4\` folder, no probe file). Only on the sorting PC's local `D:`, not on the NAS |
 
