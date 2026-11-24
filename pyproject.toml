@@ -20,6 +20,12 @@ dependencies = [
 [project.scripts]
 cclab-preproc = "cclab_preproc.cli:main"
 
+[project.optional-dependencies]
+sort = [
+    "kilosort>=4.1",
+    "torch>=2.6.0",
+]
+
 [dependency-groups]
 dev = [
     "pytest>=8.0",
@@ -36,3 +42,15 @@ packages = ["src/cclab_preproc"]
 [tool.pytest.ini_options]
 testpaths = ["tests"]
 markers = ["notebooks: executes the notebooks on synthetic data (slower)"]
+
+# Kilosort 4 (step 2) is optional because it pulls in PyTorch (~2.5 GB):
+#   uv sync --extra sort
+# On Windows and Linux, PyTorch comes from the CUDA build index so the NVIDIA GPU is used;
+# on macOS it is the normal CPU/MPS build (fine for short test slices only).
+[tool.uv.sources]
+torch = [{ index = "pytorch-cuda", marker = "sys_platform == 'win32' or sys_platform == 'linux'" }]
+
+[[tool.uv.index]]
+name = "pytorch-cuda"
+url = "https://download.pytorch.org/whl/cu124"
+explicit = true
