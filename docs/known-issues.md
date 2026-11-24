@@ -16,6 +16,12 @@ It, and `GainCorrectIM`, seem to come from the lab's `ks4_pipeline-main` / `neur
 (imported by `CCLab-BrindaRepo/Script_dlPFC/getNeuropixelData_dLPFC_Paper.ipynb`). That module should be added
 here as a step between CatGT and build-meta.
 
+### exp00 movie recordings (October 2026)
+- The SpikeGLX sync wave was off for the 10-09, 10-10 and 10-11 movie recordings (on for 10-12), so NI and probe
+  clocks are aligned from `firstSample` and the calibrated sample rates. The remaining drift has not been measured.
+- The task's resume TTL (line D) does not appear in any recording; segment on, segment off and pause do.
+- `build-meta` does not understand the movie task. `exp00_segments.py` makes the segment table instead.
+
 ### Other
 - `sessions.csv` isn't read or updated by the pipeline yet.
 - Behavioral files saved as MATLAB `table` objects can only be read by `matlab/BuildRecordingMeta.m`.

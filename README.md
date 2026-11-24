@@ -85,6 +85,8 @@ tests/                      `uv run pytest` (also runs every notebook on synthet
 - [docs/data-standard.md](docs/data-standard.md): how this repo applies the CC Lab Data Organization Standard
 - [docs/known-issues.md](docs/known-issues.md): open questions and analysis caveats
 - [docs/TODO.md](docs/TODO.md): what is left to get the movie sorts running on the lab PC, and open decisions
+- [docs/design.md](docs/design.md): where the tool is heading (machine settings, sort and Phy commands, task adapters)
+- [docs/data-transfer.md](docs/data-transfer.md): copying recordings from the NAS to the sorting PC
 - [docs/pickup.md](docs/pickup.md): work in progress, where the Oct 2026 movie-paradigm sorting stands
 
 ## Development

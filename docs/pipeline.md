@@ -51,11 +51,20 @@ Check before moving on: the output folder has `*.ap.bin` + `*.ap.meta` (and NI e
 
 ## 2. Kilosort 4
 
-Kilosort isn't installed by this repo because it needs a GPU and its own PyTorch install. Install it on the sorting
-machine following <https://github.com/MouseLand/Kilosort>.
+Kilosort 4 is an optional install of this repo: `uv sync --extra sort` (adds Kilosort 4.1.7 and a CUDA build of
+PyTorch; needs an NVIDIA GPU and driver). On the lab sorting PC run it from Windows PowerShell, on data copied to
+a local disk ([data-transfer.md](data-transfer.md)).
+
+Headless, with the probe layout read from the recording's `ap.meta` (written 2026-11, not yet run on real data):
+
+```bash
+uv run python -m cclab_preproc.sort <file.ap.bin> <results folder> [--tmax SECONDS]
+```
+
+Or with the GUI, as the lab has done so far:
 
 1. `uv run cclab-preproc show <config>` and copy the **Kilosort input folder** it prints.
-2. In the Kilosort GUI (`python -m kilosort`), load the `*.ap.bin` from that folder and pick the probe file
+2. In the Kilosort GUI (`uv run python -m kilosort`), load the `*.ap.bin` from that folder and pick the probe file
    (e.g. NP1/NP2 `.json` / `.mat` channel map).
 3. Set the results folder to the standard location:
    - supercat (task blocks sorted together): `<session>/processed/kilosort4/`
