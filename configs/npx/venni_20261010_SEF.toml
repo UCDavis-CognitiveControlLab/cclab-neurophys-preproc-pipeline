@@ -1,0 +1,40 @@
+# Neuropixels (NP1032), Venni, 2026-10-10, exp00 movie pilot, 91 completed trials.
+# NAS folder: shared/current/Neuropixel/101026_V_SEF_ACC/Movie (not in the standard layout).
+# One shank, two site blocks (from ~snsGeomMap in ap.meta, imro "firstthird"):
+#   y 0-3820 um (x=11) and y 7680-11500 um (x=114), 192 channels each. Areas: SEF + ACC.
+# The area vocabulary has no ACC or multi-area token yet, so this is filed under SEF.
+
+[session]
+animal = "venni"
+date = "20261010"
+area = "SEF"
+probe = "npx"
+penetration = ""
+stim = false
+notes = "SEF+ACC. SpikeGLX sync wave was OFF (syncSourceIdx=0): align NI and imec by firstSample + calibrated rates. TTLs: XD2 = segment on, XD0 = segment off, XD3 = pause."
+
+[[tasks]]
+name = "movie"
+spikeglx_run = "Movie"
+gate = 0
+
+[catgt]
+trigger = "0,0"
+probes = "0"
+prb_fld = true               # SpikeGLX saved Movie_g0_imec0/
+apfilter = "butter,12,300,10000"
+gblcar = true
+gfix = "0.40,0.10,0.02"
+ni = true
+extra_args = ["-xd=0,0,-1,2,50", "-xd=0,0,-1,0,50", "-xd=0,0,-1,3,50"]   # segment on / off / pause edges, 50 ms pulses
+supercat = false             # single task block
+supercat_trim_edges = false  # no sync signal
+
+[meta]
+task = "movie"
+ks_dir = "processed/kilosort4"
+sync_events_file = "processed/events/sync_event_codes.npy"   # exp00 has no event codes: needs the exp00 adapter
+behavior_file = ""
+sampling_rate = 30000
+inclusion = ["good", "mua"]
+label_column = "KSLabel"
