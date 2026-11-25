@@ -28,6 +28,39 @@ here as a step between CatGT and build-meta.
 - Ripple acquisition import (`RippleDAQ.m`, `getRipple_MGS.m`) hasn't been brought in yet.
 - LFP isn't in the metafile yet (`meta.lfp.status = "not_yet_added"`), same as the MATLAB builder.
 
+## Sorting PC traps (`cns-ddhn7qkm3`, found 2026-11-23/24)
+
+### A PowerShell window freezes its program when you click in it
+A click or drag inside a classic PowerShell window starts a text selection (the title changes to
+"Select Windows PowerShell"), and Windows pauses whatever is running there until Enter or Esc is pressed. It
+stopped the overnight copy for hours and made a finished command look hung. Fixes: right-click the title bar →
+Properties → untick QuickEdit Mode, or run long jobs in WezTerm / Windows Terminal, which do not pause.
+
+### Windows `uv` in the WSL checkout would replace the Linux `.venv`
+The repo lives in WSL and its `.venv` is the Linux environment (used by tests and by the editor's kernel). Sorting
+runs from Windows on the same folder (`Q:\home\q\...`). Before any `uv` command in a Windows shell, set
+
+```powershell
+$env:UV_PROJECT_ENVIRONMENT = "D:\<you>\venvs\cclab-preproc"
+```
+
+so the Windows environment (Kilosort + CUDA PyTorch) lives on `D:`. The variable lasts only for that window.
+Checked 2026-11-24: `uv sync --extra sort` then gives `torch 2.11.0+cu128`, `torch.cuda.is_available()` is `True`.
+
+### Zed (Windows app, connected into WSL) finds no Python kernel for `# %%` cells
+In this setup Zed lists kernels by running `jupyter kernelspec list --json` inside WSL, and fails with "No kernel
+found for language: Python" if there is no `jupyter` on the non-interactive path. What fixed it:
+
+```bash
+uv tool install jupyter-core --with jupyter-client
+.venv/bin/python -m ipykernel install --user --name cclab-preproc --display-name "cclab-preproc (.venv)"
+sudo mkdir -p /usr/local/bin && sudo ln -sfn ~/.local/bin/jupyter /usr/local/bin/jupyter
+```
+
+then `repl: refresh kernelspecs` in Zed. The symlink is a stopgap for a NixOS-WSL path that does not include
+`~/.local/bin`; adding `jupyter` to the nix config would replace it. Zed's cell output is a static image (no
+zoom); save figures with `fig.savefig(...)` to inspect them.
+
 ## Fixed in this repo (see git history)
 
 - Neuropixels notebook: the 45°/180° PSTHs were used but never loaded, and the combined MI tests paired 0°-only
