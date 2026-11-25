@@ -25,6 +25,11 @@ sort = [
     "kilosort>=4.1",
     "torch>=2.6.0",
 ]
+# The same plus the Kilosort window (PyQt). Not needed for a headless sort.
+sort-gui = [
+    "kilosort[gui]>=4.1",
+    "torch>=2.6.0",
+]
 
 [dependency-groups]
 dev = [
