@@ -3,40 +3,37 @@
 Surveyed 2026-11-18; data table, next steps and repo state corrected 2026-11-23. Current task list:
 [TODO.md](TODO.md). Delete this file once the movie sessions are sorted.
 
-## Pick up here (left off 2026-11-23, 16:45)
+## Pick up here (left off 2026-11-24, evening)
 
-**Running when we stopped:** the robocopy block from [data-transfer.md](data-transfer.md) in a PowerShell window,
-copying the four movie sessions to `D:\Quincy\data\neuropixel\venni\`. The 10-10 recording was at 17% after 14
-minutes (about 10 MB/s); the whole set needs about 8 hours.
+**Done 11-24:**
 
-**First thing next session: check the copies.**
+- All four movie sessions are on `D:\Quincy\data\neuropixel\venni\`; every `ap.bin` matches `fileSizeBytes`,
+  0 failed.
+- Kilosort install on Windows works: `uv sync --extra sort`, `torch 2.11.0+cu128`, GPU visible.
+- `sort.py` ran for the first time: 10-10, `--tmax 300`, 299 units (170 good), 315,353 spikes, drift 0.3 um,
+  peak 15 GB RAM / 3.3 GB GPU. Output in `...\venni_20261010_SEF\movie\processed\kilosort4_test300` (a test;
+  delete once the full sort exists).
+- `sort.py` now uses the lab's probe script and has `--gui` and `--keep-flagged`. The `--gui` path has not been
+  run yet.
+- Hands-on walkthrough of the raw data: `scratch/explore_1010_raw.py` (header, file size, memory map, trace plot).
+- Traps found on the way are in [known-issues.md](known-issues.md), "Sorting PC traps".
 
-1. Each `D:\Quincy\copy_10*.log` should end with a summary table showing `0` under FAILED, and a source path
-   starting with `R:\` or `D:\Wenqing`. A log whose source starts with `C:\` is from an earlier misfire (the
-   `$variables` were empty) and means that session was **not** copied: paste the whole block again.
-2. `copy_1012.log` must list the two `ap.bin` files, not just the `nidq` files.
-3. Each `ap.bin` length must equal `fileSizeBytes` in its `ap.meta` (command in data-transfer.md). robocopy
-   reserves the full file size at the start, so a full-size file alone does not prove the copy finished.
+**Next, in order:**
 
-**Then, in order:**
-
-1. From PowerShell in this repo: `uv sync --extra sort`, then
-   `uv run python -c "import torch; print(torch.cuda.is_available())"` should print `True`.
-2. Hands-on look at our own 10-10 copy (raw voltage, the header, task signals) in a `# %%` Python file. This is
-   the walkthrough that was planned and not started.
-3. Segment table on our own copy:
+1. Try `sort ... --gui` once (needs `uv sync --extra sort-gui`).
+2. Full 10-10 sort (rough guess: an hour), then the other sessions one after another, not in parallel (the GPU
+   is already fully busy with one sort; RAM peaked at 19 GB on the 94-minute recording).
+3. Walk through the sort output in `scratch/explore_1010_KS.py` (spike times, clusters, labels).
+4. Task signals (`nidq`) and the segment table on our own copy:
    `uv run python -m cclab_preproc.exp00_segments <raw\Movie_g0> <...\event_log.csv> <processed\events\segments.csv>`
-   (expect 546 segments, 91 trials).
-4. 5-minute test sort: `uv run python -m cclab_preproc.sort <ap.bin> <processed\kilosort4> --tmax 300`.
-   `sort.py` has never been run; expect to fix things.
-5. Full 10-10 sort, then `exp00_psth` (also never run), then Phy.
+   (expect 546 segments, 91 trials), then `exp00_psth` (never run), then Phy.
 
-**Not done, on purpose:** nothing in [design.md](design.md) is built, and the cleanup in its section 6 is waiting
-for a go. Open items and decisions are in [TODO.md](TODO.md).
+**Open:** keep or drop channel 191 for the real sorts (default drops; the lab's 10-09 sort kept it). Which
+checkout to run from on Windows (`Q:` with `UV_PROJECT_ENVIRONMENT`, or the `D:\Quincy\code` clone). Session
+config driving `sort` so no paths are typed ([design.md](design.md), sections 1-2; not built).
 
 **Elsewhere:** the `cclab_movie_project` changes (`docs/PREPROCESSING.md`, `qc_exp00.py`) are only on the Mac, not
-on GitHub. WSL disk clean-up (old nix generations, 9 GB uv cache, compacting the 63 GB disk file) was measured but
-not done.
+on GitHub. WSL disk clean-up was measured but not done.
 
 ## Goal
 

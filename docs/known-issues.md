@@ -45,6 +45,8 @@ $env:UV_PROJECT_ENVIRONMENT = "D:\<you>\venvs\cclab-preproc"
 ```
 
 so the Windows environment (Kilosort + CUDA PyTorch) lives on `D:`. The variable lasts only for that window.
+The alternative with no trap is a second, Windows-side clone (one exists at `D:\Quincy\code\`), kept in step
+with `git pull`; the Kilosort window's file dialogs also work better from a local drive than from `Q:`.
 Checked 2026-11-24: `uv sync --extra sort` then gives `torch 2.11.0+cu128`, `torch.cuda.is_available()` is `True`.
 
 ### Zed (Windows app, connected into WSL) finds no Python kernel for `# %%` cells

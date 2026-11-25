@@ -51,21 +51,36 @@ Check before moving on: the output folder has `*.ap.bin` + `*.ap.meta` (and NI e
 
 ## 2. Kilosort 4
 
-Kilosort 4 is an optional install of this repo: `uv sync --extra sort` (adds Kilosort 4.1.7 and a CUDA build of
-PyTorch; needs an NVIDIA GPU and driver). On the lab sorting PC run it from Windows PowerShell, on data copied to
-a local disk ([data-transfer.md](data-transfer.md)).
+Kilosort 4 is an optional install of this repo (needs an NVIDIA GPU and driver):
 
-Headless, with the probe layout read from the recording's `ap.meta` (written 2026-11, not yet run on real data):
+- `uv sync --extra sort`: Kilosort 4.1.7 and a CUDA build of PyTorch, no window. Enough for a headless sort.
+- `uv sync --extra sort-gui`: the same plus the Kilosort window (PyQt).
+
+On the lab sorting PC run it from a Windows shell, on data copied to a local disk
+([data-transfer.md](data-transfer.md)). Use WezTerm or Windows Terminal, or see the console trap in
+[known-issues.md](known-issues.md).
+
+Headless (run on 10-10 with `--tmax 300` on 2026-11-24: 299 units, 170 good, about 5 minutes):
 
 ```bash
 uv run python -m cclab_preproc.sort <file.ap.bin> <results folder> [--tmax SECONDS]
 ```
 
-Or with the GUI, as the lab has done so far:
+The probe layout is read from the recording's `ap.meta` by the lab's `make_kilosort4_probe_from_meta.py`.
+Channels SpikeGLX flags as unused (the reference site, 191 in the October recordings) are dropped;
+`--keep-flagged` keeps them, which is what the lab's 10-09 sort did (384 channels).
 
-1. `uv run cclab-preproc show <config>` and copy the **Kilosort input folder** it prints.
-2. In the Kilosort GUI (`uv run python -m kilosort`), load the `*.ap.bin` from that folder and pick the probe file
-   (e.g. NP1/NP2 `.json` / `.mat` channel map).
+With the Kilosort window, as the lab has done so far:
+
+```bash
+uv run python -m cclab_preproc.sort <file.ap.bin> <results folder> --gui
+```
+
+This writes `<recording>_ks4_probe.json` next to the results folder, prints the channel count and sample rate to
+type in, and opens the window on the recording. Then:
+
+1. Under probe layout choose "other..." and load the `_ks4_probe.json`.
+2. Enter the number of channels (`n_chan_bin`) and sampling frequency (`fs`) printed in the terminal.
 3. Set the results folder to the standard location:
    - supercat (task blocks sorted together): `<session>/processed/kilosort4/`
    - one task block: `<task>/processed/kilosort4/`
