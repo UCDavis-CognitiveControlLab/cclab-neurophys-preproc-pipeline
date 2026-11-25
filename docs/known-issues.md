@@ -20,6 +20,10 @@ here as a step between CatGT and build-meta.
 - The SpikeGLX sync wave was off for the 10-09, 10-10 and 10-11 movie recordings (on for 10-12), so NI and probe
   clocks are aligned from `firstSample` and the calibrated sample rates. The remaining drift has not been measured.
 - The task's resume TTL (line D) does not appear in any recording; segment on, segment off and pause do.
+- The Kilosort window rounds the sampling frequency to `30000.0` (seen 2026-11-24; the header says
+  `30000.453`). Spike times are stored as sample numbers, so the sort is unaffected, but `params.py` then holds the
+  rounded rate. Convert samples to seconds with `imSampRate` from the `ap.meta`, not with `params.py`; the
+  difference is about 35 ms by the end of a 39-minute recording. The headless `sort.py` passes the exact rate.
 - `build-meta` does not understand the movie task. `exp00_segments.py` makes the segment table instead.
 
 ### Other
