@@ -13,22 +13,26 @@ Surveyed 2026-11-18; data table, next steps and repo state corrected 2026-11-23.
 - `sort.py` ran for the first time: 10-10, `--tmax 300`, 299 units (170 good), 315,353 spikes, drift 0.3 um,
   peak 15 GB RAM / 3.3 GB GPU. Output in `...\venni_20261010_SEF\movie\processed\kilosort4_test300` (a test;
   delete once the full sort exists).
-- `sort.py` now uses the lab's probe script and has `--gui` and `--keep-flagged`. The `--gui` path has not been
-  run yet.
+- `sort.py` now uses the lab's probe script and has `--gui` and `--drop-flagged`. Both the headless and `--gui`
+  routes were run on 10-10 (5 minutes) and agree: 299 vs 292 units, 170 vs 175 good.
+- `scripts/sort_all.ps1` sorts every recording under `D:\Quincy\data\neuropixel\venni` one after another
+  (smallest first, skips finished ones, summary in `sort_all.log` there).
 - Hands-on walkthrough of the raw data: `scratch/explore_1010_raw.py` (header, file size, memory map, trace plot).
 - Traps found on the way are in [known-issues.md](known-issues.md), "Sorting PC traps".
 
 **Next, in order:**
 
-1. Try `sort ... --gui` once (needs `uv sync --extra sort-gui`).
-2. Full 10-10 sort (rough guess: an hour), then the other sessions one after another, not in parallel (the GPU
-   is already fully busy with one sort; RAM peaked at 19 GB on the 94-minute recording).
+1. Check the overnight `scripts/sort_all.ps1` run: `sort_all.log` should show five `OK` lines (estimate 6-8 h).
+2. Delete the test folders `processed\kilosort4_test300` and `kilosort4_gui_test` in the 10-10 session.
 3. Walk through the sort output in `scratch/explore_1010_KS.py` (spike times, clusters, labels).
 4. Task signals (`nidq`) and the segment table on our own copy:
    `uv run python -m cclab_preproc.exp00_segments <raw\Movie_g0> <...\event_log.csv> <processed\events\segments.csv>`
    (expect 546 segments, 91 trials), then `exp00_psth` (never run), then Phy.
 
-**Open:** keep or drop channel 191 for the real sorts (default drops; the lab's 10-09 sort kept it). Which
+**Decided 11-24:** channel 191 (flagged unused by SpikeGLX) stays in the sort by default, so nothing is removed
+silently; the two 5-minute tests above were run with it dropped.
+
+**Open:** which
 checkout to run from on Windows (`Q:` with `UV_PROJECT_ENVIRONMENT`, or the `D:\Quincy\code` clone). Session
 config driving `sort` so no paths are typed ([design.md](design.md), sections 1-2; not built).
 

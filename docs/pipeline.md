@@ -67,8 +67,10 @@ uv run python -m cclab_preproc.sort <file.ap.bin> <results folder> [--tmax SECON
 ```
 
 The probe layout is read from the recording's `ap.meta` by the lab's `make_kilosort4_probe_from_meta.py`.
-Channels SpikeGLX flags as unused (the reference site, 191 in the October recordings) are dropped;
-`--keep-flagged` keeps them, which is what the lab's 10-09 sort did (384 channels).
+All recorded channels go to Kilosort, including any SpikeGLX flags as unused (the probe's reference site,
+channel 191 in the October recordings, which carries no neural signal). The command prints which channels are
+flagged. This matches the lab's 10-09 sort (384 channels) and keeps the choice visible: remove units on a flagged
+channel at the end of preprocessing if wanted. `--drop-flagged` leaves those channels out of the sort instead.
 
 With the Kilosort window, as the lab has done so far:
 
