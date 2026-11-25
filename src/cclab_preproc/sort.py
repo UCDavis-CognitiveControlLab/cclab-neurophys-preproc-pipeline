@@ -9,6 +9,10 @@ Kilosort window on this recording instead; needs ``uv sync --extra sort-gui``.
 
 The probe layout is read from the recording's own ap.meta by the lab's
 ``make_kilosort4_probe_from_meta.py``, so it cannot disagree with what was recorded.
+Every recorded channel is given to Kilosort, including any that SpikeGLX marks "not
+used" (the probe's reference site, channel 191 on the October 2026 recordings): they
+are printed so you know which they are, and can be removed after sorting.
+``--drop-flagged`` leaves them out of the sort instead.
 ``--tmax 300`` sorts only the first 5 minutes: a quick test of a new machine.
 
 Copy the ap.bin to a local disk first. Sorting straight off the lab share took 13 h
@@ -42,9 +46,9 @@ def main(argv: list[str] | None = None) -> None:
     p.add_argument("--tmax", type=float, default=float("inf"), help="sort only the first N seconds")
     p.add_argument("--gui", action="store_true", help="open the Kilosort window on this file instead of sorting")
     p.add_argument(
-        "--keep-flagged",
+        "--drop-flagged",
         action="store_true",
-        help="keep channels SpikeGLX marks unused (the lab's 2026-11 sorts kept them; default drops them)",
+        help="leave channels SpikeGLX marks unused (the reference site) out of the sort; default keeps them",
     )
     a = p.parse_args(argv)
 
@@ -53,12 +57,14 @@ def main(argv: list[str] | None = None) -> None:
         if not f.is_file():
             raise SystemExit(f"error: file not found: {f}")
     meta = read_meta(meta_path)
-    drop = [] if a.keep_flagged else flagged_unused(meta)
+    flagged = flagged_unused(meta)
+    drop = flagged if a.drop_flagged else []
     probe = probe_from_meta(meta_path, exclude_channels=drop)
     n_chan_bin, fs = probe.pop("_n_chan_bin"), float(meta["imSampRate"])
     print(f"recording : {a.ap_bin}")
     print(f"results   : {a.results_dir}")
-    print(f"probe     : {probe['n_chan']} channels, y {probe['yc'].min():g}..{probe['yc'].max():g} um, dropped {drop}")
+    print(f"probe     : {probe['n_chan']} channels, y {probe['yc'].min():g}..{probe['yc'].max():g} um")
+    print(f"flagged   : SpikeGLX marks {flagged} unused; {'dropped from' if a.drop_flagged else 'kept in'} the sort")
     print(f"settings  : n_chan_bin={n_chan_bin}  fs={fs}  tmax={a.tmax}")
 
     if a.gui:
